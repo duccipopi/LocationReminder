@@ -15,6 +15,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
+        android:layout_margin="@dimen/margin_normal"
         tools:context=".locationreminders.ReminderDescriptionActivity">
         <!--TODO: add the design of the reminder details-->
 
@@ -22,12 +23,100 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Reminder Details"
+            android:text="@string/reminder_details"
             android:textSize="@dimen/text_size_large"
+            android:textStyle="bold"
+            android:padding="@dimen/margin_normal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/details_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/details_title"
+            style="@style/details_label" />
+        <TextView
+            android:id="@+id/details_title_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_medium"
+            android:text="@{reminderDataItem.title}"
+            tools:text="@string/details_title"/>
+
+        <!-- Description -->
+        <TextView
+            android:id="@+id/details_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/details_description"
+            style="@style/details_label" />
+        <TextView
+            android:id="@+id/details_description_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_medium"
+            android:text="@{reminderDataItem.description}"
+            android:minLines="2"
+            tools:text="@string/details_description"/>
+
+        <!-- Location -->
+        <TextView
+            android:id="@+id/details_location_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/details_location"
+            style="@style/details_label" />
+        <TextView
+            android:id="@+id/details_location_name_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_medium"
+            android:text="@{reminderDataItem.location}"
+            tools:text="@string/details_location"/>
+
+        <!-- Latitude -->
+        <TextView
+            android:id="@+id/details_location_latitude"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/details_latitude"
+            style="@style/details_label" />
+        <TextView
+            android:id="@+id/details_location_latitude_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_medium"
+            android:text="@{Double.toString(reminderDataItem.latitude)}"
+            tools:text="@string/details_latitude"/>
+
+        <!-- Longitude -->
+        <TextView
+            android:id="@+id/details_location_longitude"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/details_longitude"
+            style="@style/details_label" />
+        <TextView
+            android:id="@+id/details_location_longitude_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_medium"
+            android:text="@{Double.toString(reminderDataItem.longitude)}"
+            tools:text="@string/details_longitude"/>
 
     </LinearLayout>
 </layout>
