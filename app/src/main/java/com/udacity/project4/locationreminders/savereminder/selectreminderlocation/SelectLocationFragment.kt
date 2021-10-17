@@ -10,12 +10,10 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PointOfInterest
+import com.google.android.gms.maps.model.*
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
+import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentSelectLocationBinding
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
@@ -28,6 +26,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     override val _viewModel: SaveReminderViewModel by inject()
     private lateinit var binding: FragmentSelectLocationBinding
     private lateinit var map: GoogleMap
+    private var selectedPoi: PointOfInterest? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -45,13 +44,26 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        binding.savePoi.setOnClickListener {
+            onLocationSelected()
+        }
+
         return binding.root
     }
 
-    private fun onLocationSelected(poi: PointOfInterest) {
-        //        TODO: When the user confirms on the selected location,
-        //         send back the selected location details to the view model
-        //         and navigate back to the previous fragment to save the reminder and add the geofence
+    private fun onLocationSelected() {
+        if (selectedPoi != null) {
+            _viewModel.selectedPOI.value = selectedPoi
+            _viewModel.latitude.value = selectedPoi?.latLng?.latitude
+            _viewModel.longitude.value = selectedPoi?.latLng?.longitude
+            _viewModel.reminderSelectedLocationStr.value = selectedPoi?.name
+
+            _viewModel.navigationCommand.value =
+                NavigationCommand.Back
+        } else {
+            _viewModel.showSnackBarInt.value = R.string.err_select_location
+        }
+
     }
 
 
@@ -91,7 +103,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             map.clear()
             val marker = map.addMarker(MarkerOptions().position(poi.latLng).title(poi.name))
             marker.showInfoWindow()
-            onLocationSelected(poi)
+            selectedPoi = poi
         }
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(37.421944, -122.084444), 10f))
