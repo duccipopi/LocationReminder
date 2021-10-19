@@ -6,6 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
+import com.udacity.project4.util.assertReminder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.*
@@ -22,18 +23,6 @@ class RemindersDaoTest {
 
     private lateinit var database: RemindersDatabase
     private lateinit var dao: RemindersDao
-
-    private fun assertReminder(reference: ReminderDTO, given: ReminderDTO?) {
-        assert(given != null)
-        given?.let {
-            assert(it.id == reference.id)
-            assert(it.description == reference.description)
-            assert(it.location == reference.location)
-            assert(it.latitude == reference.latitude)
-            assert(it.longitude == reference.longitude)
-        }
-
-    }
 
     @Before
     fun setup() {
