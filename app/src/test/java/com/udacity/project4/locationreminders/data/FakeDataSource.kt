@@ -4,9 +4,8 @@ import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.data.dto.Result
 
 //Use FakeDataSource that acts as a test double to the LocalDataSource
-class FakeDataSource : ReminderDataSource {
-
-    private val data = mutableListOf(
+class FakeDataSource(
+    private val data: MutableList<ReminderDTO> = mutableListOf(
         ReminderDTO(
             "Coliseu",
             "È il mio cavallo di battaglia",
@@ -31,8 +30,8 @@ class FakeDataSource : ReminderDataSource {
             78.041944,
             "3"
         )
-
     )
+) : ReminderDataSource {
 
     override suspend fun getReminders(): Result<List<ReminderDTO>> {
         return Result.Success(data)
