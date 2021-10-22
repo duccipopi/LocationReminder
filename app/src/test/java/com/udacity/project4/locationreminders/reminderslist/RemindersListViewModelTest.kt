@@ -4,20 +4,16 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.udacity.project4.locationreminders.data.FakeDataSource
-import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.util.MainCoroutineRule
 import com.udacity.project4.util.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.koin.android.ext.koin.androidContext
-import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
-import org.koin.dsl.module
 
 @RunWith(AndroidJUnit4::class)
 @ExperimentalCoroutinesApi
@@ -38,7 +34,7 @@ class RemindersListViewModelTest {
 
         dataSource = FakeDataSource()
         viewModel =
-            RemindersListViewModel(ApplicationProvider.getApplicationContext(), FakeDataSource())
+            RemindersListViewModel(ApplicationProvider.getApplicationContext(), dataSource)
 
     }
 
@@ -75,11 +71,7 @@ class RemindersListViewModelTest {
     @Test
     fun noDataLoaded() {
         // GIVEN - Data Source has no entry
-        viewModel = RemindersListViewModel(
-            ApplicationProvider.getApplicationContext(), FakeDataSource(
-                mutableListOf()
-            )
-        )
+        runBlocking { dataSource.deleteAllReminders() }
 
         // WHEN - Load reminders is called
         viewModel.loadReminders()
@@ -88,6 +80,11 @@ class RemindersListViewModelTest {
         assert(viewModel.remindersList.getOrAwaitValue().isNullOrEmpty())
         assert(viewModel.showNoData.getOrAwaitValue())
 
+
+    }
+
+    @Test
+    fun shouldReturnError() {
 
     }
 
