@@ -4,6 +4,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
+import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -20,6 +21,19 @@ fun assertReminder(reference: ReminderDTO, given: ReminderDTO?) {
     assert(given != null)
     given?.let {
         assert(it.id == reference.id)
+        assert(it.title == reference.title)
+        assert(it.description == reference.description)
+        assert(it.location == reference.location)
+        assert(it.latitude == reference.latitude)
+        assert(it.longitude == reference.longitude)
+    }
+}
+
+fun assertReminder(reference: ReminderDataItem, given: ReminderDataItem?) {
+    assert(given != null)
+    given?.let {
+        assert(it.id == reference.id)
+        assert(it.title == reference.title)
         assert(it.description == reference.description)
         assert(it.location == reference.location)
         assert(it.latitude == reference.latitude)
@@ -62,8 +76,15 @@ fun <T> MutableLiveData<T>.getOrAwaitValue(
     return data as T
 }
 
+@VisibleForTesting(otherwise = VisibleForTesting.NONE)
+fun ReminderDTO.asDataItem(): ReminderDataItem {
+    return ReminderDataItem(
+        title, description, location, latitude, longitude, id
+    )
+}
+
 @ExperimentalCoroutinesApi
-class MainCoroutineRule(val dispatcher: TestCoroutineDispatcher = TestCoroutineDispatcher()):
+class MainCoroutineRule(val dispatcher: TestCoroutineDispatcher = TestCoroutineDispatcher()) :
     TestWatcher(),
     TestCoroutineScope by TestCoroutineScope(dispatcher) {
     override fun starting(description: Description?) {
