@@ -33,8 +33,6 @@ class RemindersListViewModelTest {
     private lateinit var dataSource: FakeDataSource
     private lateinit var viewModel: RemindersListViewModel
 
-    private lateinit var _viewModel: RemindersListViewModel
-
     @Before
     fun setup() {
 
