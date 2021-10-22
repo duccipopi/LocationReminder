@@ -14,6 +14,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.core.context.stopKoin
+import java.util.*
+import java.util.concurrent.TimeoutException
 
 @RunWith(AndroidJUnit4::class)
 @ExperimentalCoroutinesApi
@@ -85,9 +87,45 @@ class RemindersListViewModelTest {
 
     @Test
     fun shouldReturnError() {
+        // GIVEN - Data source has some problem (and will return an error)
+        val errorMessage = "0xFA173D"
+        dataSource.alwaysReturnError(true, errorMessage)
+
+        // WHEN - Load reminders for fault datasource
+        viewModel.loadReminders()
+
+        // THEN - List must not be set, no data must be true and showSnackBar must have a message
+        try {
+            viewModel.remindersList.getOrAwaitValue().isNullOrEmpty()
+            assert(false) // Reminder list was set with some value
+        } catch (e: TimeoutException) {
+            assert(true) // Reminder list not set
+        }
+
+        assert(viewModel.showNoData.getOrAwaitValue())
+        assert(viewModel.showSnackBar.getOrAwaitValue() == errorMessage)
+
 
     }
 
-    // TODO shouldReturnError and check_loading
+    @Test
+    fun check_loading() {
+        // GIVEN - Data need to be loaded and loading is not set
+        assert(viewModel.showLoading.value == null)
+
+        // WHEN - Load reminders
+        mainCoroutineRule.pauseDispatcher()
+        viewModel.loadReminders()
+
+        // THEN - Loading indicator need to be showing
+        assert(viewModel.showLoading.getOrAwaitValue())
+
+        // WHEN - Finished loading
+        mainCoroutineRule.resumeDispatcher()
+
+        // THEN - Loading indication should be hide
+        assert(!viewModel.showLoading.getOrAwaitValue())
+
+    }
 
 }

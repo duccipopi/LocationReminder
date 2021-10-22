@@ -33,8 +33,14 @@ class FakeDataSource(
     )
 ) : ReminderDataSource {
 
+    private var shouldReturnError = false
+    private var errorMessage = "No reminder with given id found"
+
     override suspend fun getReminders(): Result<List<ReminderDTO>> {
-        return Result.Success(data)
+        return if (shouldReturnError)
+            Result.Error(errorMessage)
+        else
+            Result.Success(data)
     }
 
     override suspend fun saveReminder(reminder: ReminderDTO) {
@@ -43,14 +49,19 @@ class FakeDataSource(
 
     override suspend fun getReminder(id: String): Result<ReminderDTO> {
         val reminder = data.find { id == it.id }
-        return if (reminder != null)
-            Result.Success(reminder)
+        return if (reminder == null || shouldReturnError)
+            Result.Error(errorMessage)
         else
-            Result.Error("No reminder with $id found")
+            Result.Success(reminder)
     }
 
     override suspend fun deleteAllReminders() {
         data.clear()
+    }
+
+    fun alwaysReturnError(value: Boolean, message: String = "Always return error") {
+        shouldReturnError = value
+        errorMessage = message
     }
 
 
