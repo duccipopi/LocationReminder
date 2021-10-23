@@ -16,14 +16,14 @@ import org.koin.android.ext.android.inject
  */
 class AuthenticationActivity : AppCompatActivity() {
 
-    private val authController: AuthenticationController by inject()
+    private val authController: Authenticator by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_authentication)
 
-        if (!authController.logged.value!!) {
+        if (!authController.getLoginState().value!!) {
             val button = findViewById<Button>(R.id.login_btn)
             button.setOnClickListener {
                 processSignIn()

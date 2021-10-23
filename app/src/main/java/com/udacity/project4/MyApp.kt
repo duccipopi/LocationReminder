@@ -3,6 +3,7 @@ package com.udacity.project4
 import android.app.Application
 import com.udacity.project4.authentication.AuthenticationActivity
 import com.udacity.project4.authentication.AuthenticationController
+import com.udacity.project4.authentication.Authenticator
 import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.local.LocalDB
 import com.udacity.project4.locationreminders.data.local.RemindersLocalRepository
@@ -40,7 +41,7 @@ class MyApp : Application() {
             single { RemindersLocalRepository(get()) as ReminderDataSource }
             single { LocalDB.createRemindersDao(this@MyApp) }
 
-            single { AuthenticationController(AuthenticationActivity::class.java) }
+            single { AuthenticationController(AuthenticationActivity::class.java) as Authenticator}
         }
 
         startKoin {

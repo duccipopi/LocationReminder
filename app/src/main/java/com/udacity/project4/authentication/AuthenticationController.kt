@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
-class AuthenticationController(private val loginActivity: Class<*>) {
+class AuthenticationController(private val loginActivity: Class<*>): Authenticator {
     private var firebaseAuth = FirebaseAuth.getInstance()
 
     init {
@@ -16,17 +16,18 @@ class AuthenticationController(private val loginActivity: Class<*>) {
         }
     }
 
-    val logged: LiveData<Boolean>
-        get() = _logged
-
     private val _logged: MutableLiveData<Boolean> =
         MutableLiveData(firebaseAuth.currentUser != null)
 
-    fun signOut() {
+    override fun getLoginState(): LiveData<Boolean> {
+        return _logged
+    }
+
+    override fun signOut() {
         firebaseAuth.signOut()
     }
 
-    fun signIn(context: Context) {
+    override fun signIn(context: Context) {
         context.startActivity(Intent(context, loginActivity))
     }
 

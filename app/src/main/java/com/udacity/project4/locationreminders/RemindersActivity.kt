@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
 import com.udacity.project4.R
 import com.udacity.project4.authentication.AuthenticationController
+import com.udacity.project4.authentication.Authenticator
 import kotlinx.android.synthetic.main.activity_reminders.*
 import org.koin.android.ext.android.inject
 
@@ -22,13 +23,13 @@ class RemindersActivity : AppCompatActivity() {
         private const val REQUEST_PERMISSION_REQUEST_CODE = 0x1010;
     }
 
-    private val authController: AuthenticationController by inject()
+    private val authController: Authenticator by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reminders)
 
-        authController.logged.observe(this, Observer { logged ->
+        authController.getLoginState().observe(this, Observer { logged ->
             logged?.let {
                 if (!logged) {
                     authController.signIn(this)
