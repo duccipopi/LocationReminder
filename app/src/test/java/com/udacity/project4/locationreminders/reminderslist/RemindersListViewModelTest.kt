@@ -3,7 +3,7 @@ package com.udacity.project4.locationreminders.reminderslist
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.udacity.project4.locationreminders.data.FakeDataSource
+import com.udacity.projec4.locationreminders.data.FakeDataSource
 import com.udacity.project4.util.MainCoroutineRule
 import com.udacity.project4.util.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -14,7 +14,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.core.context.stopKoin
-import java.util.*
 import java.util.concurrent.TimeoutException
 
 @RunWith(AndroidJUnit4::class)

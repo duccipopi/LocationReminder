@@ -32,9 +32,6 @@ class AuthenticationActivity : AppCompatActivity() {
             navigateTo(RemindersActivity::class.java)
         }
 
-//          TODO: a bonus is to customize the sign in flow to look nice using :
-        //https://github.com/firebase/FirebaseUI-Android/blob/master/auth/README.md#custom-layout
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -43,8 +40,6 @@ class AuthenticationActivity : AppCompatActivity() {
         if (requestCode == SIGN_IN_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 navigateTo(RemindersActivity::class.java)
-            } else {
-                // TODO failed to sign in
             }
         }
     }

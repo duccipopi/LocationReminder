@@ -44,6 +44,18 @@ android {
         sourceCompatibility 1.8
         targetCompatibility 1.8
     }
+
+    sourceSets {
+        String shared = 'src/sharedTest/'
+
+        test {
+            java.srcDirs += shared
+        }
+
+        androidTest {
+            java.srcDirs += shared
+        }
+    }
 }
 
 dependencies {
