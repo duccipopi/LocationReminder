@@ -19,10 +19,6 @@ import org.koin.android.ext.android.inject
  */
 class RemindersActivity : AppCompatActivity() {
 
-    companion object {
-        private const val REQUEST_PERMISSION_REQUEST_CODE = 0x1010;
-    }
-
     private val authController: Authenticator by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,33 +34,6 @@ class RemindersActivity : AppCompatActivity() {
             }
         })
 
-        if (!allPermissionsGranted()) {
-            requestMissingPermissions()
-        }
-
-    }
-
-    private val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        listOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_BACKGROUND_LOCATION
-        )
-    } else {
-        listOf(
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
-    }
-
-    private fun requestMissingPermissions() {
-        requestPermissions(
-            (permissions.filter {
-                checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED
-            }).toTypedArray(),
-        REQUEST_PERMISSION_REQUEST_CODE)
-    }
-
-    private fun allPermissionsGranted(): Boolean {
-        return permissions.none { checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

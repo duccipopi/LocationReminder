@@ -67,26 +67,3 @@ fun View.fadeOut() {
     })
 }
 
-// Map location permission check
-fun GoogleMap.setMyLocationIfAllowed(context: Context) {
-    val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        listOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_BACKGROUND_LOCATION
-        )
-    } else {
-        listOf(
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
-    }
-
-    val missed = (permissions.filter {
-        ActivityCompat.checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED
-    })
-
-    if (missed.isEmpty()) {
-        isMyLocationEnabled = true
-    }
-
-}
-

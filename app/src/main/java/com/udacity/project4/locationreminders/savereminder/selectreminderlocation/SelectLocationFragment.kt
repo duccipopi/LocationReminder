@@ -19,8 +19,7 @@ import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentSelectLocationBinding
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
-import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
-import com.udacity.project4.utils.setMyLocationIfAllowed
+import com.udacity.project4.utils.*
 import org.koin.android.ext.android.inject
 
 class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
@@ -45,6 +44,11 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
         setHasOptionsMenu(true)
         setDisplayHomeAsUpEnabled(true)
+
+
+        if (!anyPermissionsGranted(LOCATION_FOREGROUND_PERMISSIONS)) {
+            requestMissingPermissions(LOCATION_FOREGROUND_PERMISSIONS)
+        }
 
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -101,11 +105,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         else -> super.onOptionsItemSelected(item)
     }
 
-    @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-
-        map.setMyLocationIfAllowed(requireActivity())
 
         map.setMapStyle(MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style))
         map.setOnPoiClickListener { poi ->
@@ -117,8 +118,19 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(37.421944, -122.084444), 10f))
 
-        if (map.isMyLocationEnabled) {
-            val fusedClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        enableMyLocationIfAllowed()
+
+    }
+
+    @SuppressLint("MissingPermission")
+    fun enableMyLocationIfAllowed() {
+
+        if (anyPermissionsGranted(LOCATION_FOREGROUND_PERMISSIONS)) {
+
+            map.isMyLocationEnabled = true
+
+            val fusedClient =
+                LocationServices.getFusedLocationProviderClient(requireActivity())
 
             val location = fusedClient.lastLocation
             location.addOnCompleteListener {
@@ -133,5 +145,13 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         }
     }
 
-
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == REQUEST_PERMISSION_REQUEST_CODE) {
+            enableMyLocationIfAllowed()
+        }
+    }
 }
