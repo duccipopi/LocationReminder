@@ -1,20 +1,28 @@
 package com.udacity.project4.locationreminders.savereminder
 
+import android.content.IntentSender
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsResponse
+import com.google.android.gms.location.SettingsClient
+import com.google.android.gms.tasks.Task
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentSaveReminderBinding
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
-import com.udacity.project4.utils.addGeofence
-import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
+import com.udacity.project4.utils.*
 import org.koin.android.ext.android.inject
 
 class SaveReminderFragment : BaseFragment() {
+    private val REQUEST_CHECK_SETTINGS: Int = 0x5e7
+
     //Get the view model this time as a single to be shared with the another fragment
     override val _viewModel: SaveReminderViewModel by inject()
     private lateinit var binding: FragmentSaveReminderBinding
@@ -53,12 +61,50 @@ class SaveReminderFragment : BaseFragment() {
                 title, description, location, latitude, longitude
             )
 
-            addGeofence(requireContext(), reminder)
+            if (allPermissionsGranted(LOCATION_BACKGROUND_PERMISSIONS)
+                && anyPermissionsGranted(LOCATION_FOREGROUND_PERMISSIONS)
+            ) {
 
-            _viewModel.validateAndSaveReminder(
-                reminder
-            )
+                processIfDeviceLocationIsOn {
+                    addGeofence(requireContext(), reminder)
+                    _viewModel.validateAndSaveReminder(reminder)
+                }
+
+            } else {
+                val permission = LOCATION_BACKGROUND_PERMISSIONS + LOCATION_FOREGROUND_PERMISSIONS
+                requestMissingPermissions(permission)
+            }
         }
+    }
+
+    private fun processIfDeviceLocationIsOn(function: () -> Unit) {
+
+        val builder = LocationSettingsRequest.Builder()
+
+        val client: SettingsClient = LocationServices.getSettingsClient(requireActivity())
+        val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
+
+        task.addOnFailureListener { exception ->
+            if (exception is ResolvableApiException) {
+                // Location settings are not satisfied, but this can be fixed
+                // by showing the user a dialog.
+                try {
+                    // Show the dialog by calling startResolutionForResult(),
+                    // and check the result in onActivityResult().
+                    exception.startResolutionForResult(
+                        requireActivity(),
+                        REQUEST_CHECK_SETTINGS
+                    )
+                } catch (sendEx: IntentSender.SendIntentException) {
+                    // Ignore the error.
+                }
+            }
+        }
+
+        task.addOnCompleteListener {
+            if (it.isSuccessful) function()
+        }
+
     }
 
     override fun onDestroy() {
