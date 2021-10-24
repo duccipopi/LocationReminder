@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
 const val EXTRA_REMINDER_ID = "extra_reminder_id"
 const val ACTION_GEOFENCE_EVENT = "action.geofence.event"
 const val GEOFENCE_RADIUS_IN_METERS = 100f
-val GEOFENCE_EXPIRATION_IN_MILLIS = TimeUnit.DAYS.toMillis(1)
+const val GEOFENCE_EXPIRATION = Geofence.NEVER_EXPIRE
 
 fun getGeofencePendingIntent(context: Context, reminderId: String): PendingIntent {
     val intent = Intent(context, GeofenceBroadcastReceiver::class.java)
@@ -39,7 +39,7 @@ fun addGeofence(context: Context, reminder: ReminderDataItem): Boolean {
             GEOFENCE_RADIUS_IN_METERS
         )
         .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
-        .setExpirationDuration(GEOFENCE_EXPIRATION_IN_MILLIS)
+        .setExpirationDuration(GEOFENCE_EXPIRATION)
         .build()
 
     val geofencingRequest = GeofencingRequest.Builder()
