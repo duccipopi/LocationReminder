@@ -116,6 +116,13 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             selectedPoi = poi
         }
 
+        map.setOnMapClickListener { latLng ->
+            map.clear()
+            val marker = map.addMarker(MarkerOptions().position(latLng).title(latLng.toString()))
+            marker.showInfoWindow()
+            selectedPoi = PointOfInterest(latLng, latLng.toString(), latLng.toString())
+        }
+
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(37.421944, -122.084444), 10f))
 
         enableMyLocationIfAllowed()
