@@ -8,6 +8,7 @@ import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
@@ -153,6 +154,13 @@ class RemindersActivityTest :
         // Click to save reminder
         onView(withId(R.id.saveReminder)).perform(click())
 
+        // Check if toast is shown and with R.string.reminder_saved
+        var activity: RemindersActivity? = null
+        activityScenario.onActivity {
+            activity = it
+        }
+        onView(withText(R.string.reminder_saved)).inRoot(withDecorView(not(activity!!.window.decorView))).check(matches(isDisplayed()))
+
         // Check if it was correctly displayed
         onView(withId(R.id.reminderssRecyclerView)).check(matches(isDisplayed()))
         onView(withId(R.id.reminderssRecyclerView)).check(matches(hasDescendant((withText(reminder.title)))))
@@ -162,7 +170,5 @@ class RemindersActivityTest :
         activityScenario.close()
     }
 
-
-//    TODO: add End to End testing to the app
 
 }
