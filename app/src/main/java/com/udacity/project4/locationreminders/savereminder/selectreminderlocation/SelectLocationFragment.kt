@@ -10,7 +10,10 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PointOfInterest
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
@@ -27,6 +30,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     private lateinit var binding: FragmentSelectLocationBinding
     private lateinit var map: GoogleMap
     private var selectedPoi: PointOfInterest? = null
+
+    // For test purpose
+    private val defaultPoi: List<PointOfInterest> by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -46,6 +52,10 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
         binding.savePoi.setOnClickListener {
             onLocationSelected()
+        }
+
+        if (defaultPoi.isNotEmpty()) {
+            selectedPoi = defaultPoi.first()
         }
 
         return binding.root

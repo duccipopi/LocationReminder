@@ -1,6 +1,7 @@
 package com.udacity.project4
 
 import android.app.Application
+import com.google.android.gms.maps.model.PointOfInterest
 import com.udacity.project4.authentication.AuthenticationActivity
 import com.udacity.project4.authentication.AuthenticationController
 import com.udacity.project4.authentication.Authenticator
@@ -41,7 +42,10 @@ class MyApp : Application() {
             single { RemindersLocalRepository(get()) as ReminderDataSource }
             single { LocalDB.createRemindersDao(this@MyApp) }
 
-            single { AuthenticationController(AuthenticationActivity::class.java) as Authenticator}
+            single { AuthenticationController(AuthenticationActivity::class.java) as Authenticator }
+
+            single<List<PointOfInterest>> { emptyList() }
+
         }
 
         startKoin {
