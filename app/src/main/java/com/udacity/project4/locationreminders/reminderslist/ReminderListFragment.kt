@@ -5,6 +5,7 @@ import android.view.*
 import androidx.databinding.DataBindingUtil
 import com.udacity.project4.R
 import com.udacity.project4.authentication.AuthenticationController
+import com.udacity.project4.authentication.Authenticator
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentRemindersBinding
@@ -19,7 +20,7 @@ class ReminderListFragment : BaseFragment() {
     override val _viewModel: RemindersListViewModel by viewModel()
     private lateinit var binding: FragmentRemindersBinding
 
-    private val authController: AuthenticationController by inject()
+    private val authController: Authenticator by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
