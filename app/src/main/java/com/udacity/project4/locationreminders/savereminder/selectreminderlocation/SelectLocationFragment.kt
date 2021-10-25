@@ -2,6 +2,7 @@ package com.udacity.project4.locationreminders.savereminder.selectreminderlocati
 
 
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
@@ -158,7 +159,12 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         grantResults: IntArray
     ) {
         if (requestCode == REQUEST_PERMISSION_REQUEST_CODE) {
-            enableMyLocationIfAllowed()
+            if (permissions.filter { LOCATION_FOREGROUND_PERMISSIONS.contains(it) }
+                    .any { grantResults[permissions.indexOf(it)] == PackageManager.PERMISSION_GRANTED }) {
+                enableMyLocationIfAllowed()
+            } else {
+                _viewModel.showSnackBarInt.value = R.string.permission_denied_explanation
+            }
         }
     }
 }
