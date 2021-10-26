@@ -133,7 +133,7 @@ class SaveReminderFragment : BaseFragment() {
             if (anyForeground && allBackground) {
                 tryToSaveReminder()
             } else {
-                _viewModel.showSnackBarInt.value = R.string.permission_denied_explanation
+                _viewModel.showSnackBarInt.value = R.string.permission_denied_explanation_save
             }
         }
     }
